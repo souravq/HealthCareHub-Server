@@ -35,6 +35,10 @@ const getAllAdminDataFromDB = async (param: any) => {
   //   }
 
   console.dir(andCondition, { depth: "infinity" });
+  // Soft Delete Data Avoid
+  andCondition.push({
+    isDeleted: false,
+  });
 
   const whereConditions: Prisma.AdminWhereInput = { AND: andCondition };
 
@@ -106,9 +110,40 @@ const deleteAdminDataById = async (id: string) => {
   return result;
 };
 
+// Soft Delete Admin Data By Id
+const softDeleteAdminDataById = async (id: string) => {
+  await prisma.admin.findUniqueOrThrow({
+    where: {
+      id,
+    },
+  });
+
+  const result = await prisma.$transaction(async (transactionClient) => {
+    const adminDeleteData = await transactionClient.admin.update({
+      where: {
+        id,
+      },
+      data: {
+        isDeleted: true,
+      },
+    });
+
+    const userDeleteData = await transactionClient.user.update({
+      where: {
+        email: adminDeleteData.email,
+      },
+      data: {
+        status: "BLOCKED",
+      },
+    });
+  });
+  return result;
+};
+
 export const AdminService = {
   getAllAdminDataFromDB,
   getAdminDataByIdFromDB,
   updateAdminDataById,
   deleteAdminDataById,
+  softDeleteAdminDataById,
 };
