@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { AdminService } from "./admin.service";
-import { sendResponse } from "../../../shared/SendResponse";
+import { sendResponse } from "../../../shared/sendResponse";
 
 const getAllAdminDataFromDB = async (req: Request, res: Response) => {
   try {
