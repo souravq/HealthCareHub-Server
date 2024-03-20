@@ -11,4 +11,7 @@ router.get("/:id", AdminController.getAdminDataByIdFromDB);
 // Update Data
 router.patch("/:id", AdminController.updateAdminDataById);
 
+// Delete Admin Data
+router.delete("/:id", AdminController.deleteAdminDataById);
+
 export const AdminRouter = router;
