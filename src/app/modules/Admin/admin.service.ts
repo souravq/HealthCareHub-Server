@@ -1,4 +1,4 @@
-import { Prisma, PrismaClient } from "@prisma/client";
+import { Admin, Prisma, PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
@@ -63,7 +63,19 @@ const getAdminDataByIdFromDB = async (id: string) => {
   return result;
 };
 
+const updateAdminDataById = async (id: string, bodyData: any) => {
+  console.log(id);
+  const result = await prisma.admin.update({
+    where: {
+      id,
+    },
+    data: bodyData,
+  });
+  return result;
+};
+
 export const AdminService = {
   getAllAdminDataFromDB,
   getAdminDataByIdFromDB,
+  updateAdminDataById,
 };
