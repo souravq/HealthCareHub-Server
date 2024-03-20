@@ -1,10 +1,13 @@
 import { Request, Response } from "express";
 import { AdminService } from "./admin.service";
+import { sendResponse } from "../../../shared/SendResponse";
 
 const getAllAdminDataFromDB = async (req: Request, res: Response) => {
   try {
     const result = await AdminService.getAllAdminDataFromDB(req.query);
-    res.status(200).json({
+
+    sendResponse(res, {
+      statusCode: 200,
       success: true,
       message: "All Admin data fetched !!!",
       meta: result.meta,
@@ -24,7 +27,8 @@ const getAdminDataByIdFromDB = async (req: Request, res: Response) => {
   try {
     const id = req.params.id;
     const result = await AdminService.getAdminDataByIdFromDB(id);
-    res.status(200).json({
+    sendResponse(res, {
+      statusCode: 200,
       success: true,
       message: "All Admin data fetched !!!",
       data: result,
@@ -44,7 +48,8 @@ const updateAdminDataById = async (req: Request, res: Response) => {
     const id = req.params.id;
     const bodyData = req.body;
     const result = await AdminService.updateAdminDataById(id, bodyData);
-    res.status(200).json({
+    sendResponse(res, {
+      statusCode: 200,
       success: true,
       message: "Admin data Updated !!!",
       data: result,
@@ -63,7 +68,8 @@ const deleteAdminDataById = async (req: Request, res: Response) => {
   try {
     const result = await AdminService.deleteAdminDataById(req.params.id);
 
-    res.status(200).json({
+    sendResponse(res, {
+      statusCode: 200,
       success: true,
       message: "Admin deleted Successfully !!!",
       data: result,
@@ -81,8 +87,8 @@ const deleteAdminDataById = async (req: Request, res: Response) => {
 const softDeleteAdminDataById = async (req: Request, res: Response) => {
   try {
     const result = await AdminService.softDeleteAdminDataById(req.params.id);
-
-    res.status(200).json({
+    sendResponse(res, {
+      statusCode: 200,
       success: true,
       message: "Admin Data Soft deleted Successfully !!!",
       data: result,
