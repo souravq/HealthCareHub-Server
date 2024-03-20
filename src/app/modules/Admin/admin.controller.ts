@@ -8,7 +8,8 @@ const getAllAdminDataFromDB = async (req: Request, res: Response) => {
     res.status(200).json({
       success: true,
       message: "All Admin data fetched !!!",
-      data: result,
+      meta: result.meta,
+      data: result.data,
     });
   } catch (err: any) {
     res.status(500).json({

@@ -43,7 +43,13 @@ const getAllAdminDataFromDB = async (param: any) => {
     skip: (parseInt(page) - 1) * limit,
     take: parseInt(limit),
   });
-  return result;
+  return {
+    meta: {
+      page: page,
+      limit: limit,
+    },
+    data: result,
+  };
 };
 
 export const AdminService = {
