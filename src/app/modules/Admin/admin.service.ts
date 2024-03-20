@@ -62,6 +62,7 @@ const getAdminDataByIdFromDB = async (id: string) => {
   const result = await prisma.admin.findUnique({
     where: {
       id,
+      isDeleted: false,
     },
   });
   return result;
@@ -73,6 +74,7 @@ const updateAdminDataById = async (id: string, bodyData: any) => {
   await prisma.admin.findUniqueOrThrow({
     where: {
       id,
+      isDeleted: false,
     },
   });
 
@@ -115,6 +117,7 @@ const softDeleteAdminDataById = async (id: string) => {
   await prisma.admin.findUniqueOrThrow({
     where: {
       id,
+      isDeleted: false,
     },
   });
 
