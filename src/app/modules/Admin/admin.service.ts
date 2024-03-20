@@ -4,7 +4,6 @@ const prisma = new PrismaClient();
 
 const getAllAdminDataFromDB = async (param: any) => {
   const { searchTerm, page, limit } = param;
-  console.log(searchTerm);
   const andCondition: Prisma.AdminWhereInput[] = [];
 
   const adminSearchableField = ["name", "email"];
@@ -34,7 +33,7 @@ const getAllAdminDataFromDB = async (param: any) => {
   //     });
   //   }
 
-  console.dir(andCondition, { depth: "infinity" });
+  //console.dir(andCondition, { depth: "infinity" });
   // Soft Delete Data Avoid
   andCondition.push({
     isDeleted: false,
@@ -58,7 +57,11 @@ const getAllAdminDataFromDB = async (param: any) => {
 
 // Get Admin Data By Id
 const getAdminDataByIdFromDB = async (id: string) => {
-  console.log(id);
+  await prisma.admin.findUniqueOrThrow({
+    where: {
+      id,
+    },
+  });
   const result = await prisma.admin.findUnique({
     where: {
       id,
