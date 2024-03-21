@@ -1,16 +1,13 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Request, RequestHandler, Response } from "express";
 import { AdminService } from "./admin.service";
 import { sendResponse } from "../../../shared/sendResponse";
 import { StatusCodes } from "http-status-codes";
+import { catchAsync } from "../../../shared/catchAsync";
 
-const getAllAdminDataFromDB = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
+// Get All Admin Data
+const getAllAdminDataFromDB = catchAsync(
+  async (req: Request, res: Response) => {
     const result = await AdminService.getAllAdminDataFromDB(req.query);
-
     sendResponse(res, {
       statusCode: StatusCodes.OK,
       success: true,
@@ -18,10 +15,8 @@ const getAllAdminDataFromDB = async (
       meta: result.meta,
       data: result.data,
     });
-  } catch (err: any) {
-    next(err);
   }
-};
+);
 
 // Get Admin Data By Id
 const getAdminDataByIdFromDB = async (
@@ -35,7 +30,7 @@ const getAdminDataByIdFromDB = async (
     sendResponse(res, {
       statusCode: StatusCodes.OK,
       success: true,
-      message: "All Admin data fetched !!!",
+      message: "Admin data fetched By ID !!!",
       data: result,
     });
   } catch (err: any) {
