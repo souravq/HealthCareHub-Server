@@ -1,15 +1,8 @@
 import express, { NextFunction, Request, Response } from "express";
 import { AdminController } from "./admin.controller";
+import { AnyZodObject } from "zod";
+import { AdminValidation } from "./admin.validation";
 const router = express.Router();
-
-import { AnyZodObject, z } from "zod";
-
-const updateZod = z.object({
-  body: z.object({
-    name: z.string(),
-    contactNumber: z.string(),
-  }),
-});
 
 // Validate Request
 const validateRequest = (zodSchema: AnyZodObject) => {
@@ -34,7 +27,7 @@ router.get("/:id", AdminController.getAdminDataByIdFromDB);
 // Update Data
 router.patch(
   "/:id",
-  validateRequest(updateZod),
+  validateRequest(AdminValidation.updateZod),
   AdminController.updateAdminDataById
 );
 
