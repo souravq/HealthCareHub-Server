@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
+import generateToken from "../../helpers/jwtHelper";
 
 const prisma = new PrismaClient();
 
@@ -22,29 +22,23 @@ const loginUser = async (payload: { email: string; password: string }) => {
   }
 
   // Generate Access Token
-  const accessToken = jwt.sign(
+  const accessToken = generateToken(
     {
       email: userData.email,
       role: userData.role,
     },
-    "123456",
-    {
-      algorithm: "HS256",
-      expiresIn: "5m",
-    }
+    "12345",
+    "5m"
   );
 
   // Generate Refresh Token
-  const refreshToken = jwt.sign(
+  const refreshToken = generateToken(
     {
       email: userData.email,
       role: userData.role,
     },
     "12345678",
-    {
-      algorithm: "HS256",
-      expiresIn: "30d",
-    }
+    "30d"
   );
 
   //console.log({ accessToken });
