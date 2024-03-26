@@ -55,8 +55,11 @@ const loginUser = async (payload: { email: string; password: string }) => {
 // Refresh Token
 const refreshToken = async (refreshToken: string) => {
   try {
-    let decoded = jwtHelper.verifyToken(refreshToken, "12345678");
-    console.log(decoded);
+    let decoded = jwtHelper.verifyToken(
+      refreshToken,
+      config.refresh_jwt_secret as string
+    );
+    console.log({ decoded });
 
     // Check User Exist
     const userData = await prisma.user.findUniqueOrThrow({
