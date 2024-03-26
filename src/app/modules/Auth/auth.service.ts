@@ -30,12 +30,29 @@ const loginUser = async (payload: { email: string; password: string }) => {
     "123456",
     {
       algorithm: "HS256",
-      expiresIn: "1h",
+      expiresIn: "5m",
     }
   );
 
-  console.log({ accessToken });
-  return accessToken;
+  // Generate Refresh Token
+  const refreshToken = jwt.sign(
+    {
+      email: userData.email,
+      role: userData.role,
+    },
+    "12345678",
+    {
+      algorithm: "HS256",
+      expiresIn: "30d",
+    }
+  );
+
+  //console.log({ accessToken });
+  return {
+    accessToken,
+    refreshToken,
+    needPasswordChange: userData.needPasswordChange,
+  };
 };
 
 export const AuthService = {

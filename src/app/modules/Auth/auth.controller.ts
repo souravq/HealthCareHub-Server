@@ -6,17 +6,25 @@ import { sendResponse } from "../../../shared/sendResponse";
 const loginUser = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     let result = await AuthService.loginUser(req.body);
+
+    const { refreshToken } = result;
+    res.cookie("refreshToken", refreshToken, {
+      secure: false,
+      httpOnly: true,
+    });
+
     console.log(result);
     sendResponse(res, {
       statusCode: 200,
       success: true,
       message: "Login Succesfully",
-      data: result,
+      data: {
+        accessToken: result.accessToken,
+        needPasswordChange: result.needPasswordChange,
+      },
     });
   }
 );
-// [1,2,2,1]
-// true
 
 export const AuthController = {
   loginUser,
