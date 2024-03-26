@@ -2,6 +2,7 @@ import { PrismaClient, UserStatus } from "@prisma/client";
 import bcrypt from "bcrypt";
 import { jwtHelper } from "../../helpers/jwtHelper";
 import * as jwt from "jsonwebtoken";
+import config from "../../../config";
 
 const prisma = new PrismaClient();
 
@@ -29,8 +30,8 @@ const loginUser = async (payload: { email: string; password: string }) => {
       email: userData.email,
       role: userData.role,
     },
-    "12345",
-    "5m"
+    config.jwt_secret as string,
+    config.jwt_expries_in as string
   );
 
   // Generate Refresh Token
@@ -39,8 +40,8 @@ const loginUser = async (payload: { email: string; password: string }) => {
       email: userData.email,
       role: userData.role,
     },
-    "12345678",
-    "30d"
+    config.refresh_jwt_secret as string,
+    config.refresh_jwt_secret_expries_in as string
   );
 
   //console.log({ accessToken });
@@ -72,8 +73,8 @@ const refreshToken = async (refreshToken: string) => {
         email: userData.email,
         role: userData.role,
       },
-      "12345",
-      "5m"
+      config.jwt_secret as string,
+      config.jwt_expries_in as string
     );
 
     return {
