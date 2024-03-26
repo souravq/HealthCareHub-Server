@@ -1,6 +1,6 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, UserStatus } from "@prisma/client";
 import bcrypt from "bcrypt";
-import generateToken from "../../helpers/jwtHelper";
+import { jwtHelper } from "../../helpers/jwtHelper";
 import * as jwt from "jsonwebtoken";
 
 const prisma = new PrismaClient();
@@ -10,6 +10,7 @@ const loginUser = async (payload: { email: string; password: string }) => {
   const userData = await prisma.user.findUniqueOrThrow({
     where: {
       email: payload.email,
+      status: UserStatus.ACTIVE,
     },
   });
 
@@ -23,7 +24,7 @@ const loginUser = async (payload: { email: string; password: string }) => {
   }
 
   // Generate Access Token
-  const accessToken = generateToken(
+  const accessToken = jwtHelper.generateToken(
     {
       email: userData.email,
       role: userData.role,
@@ -33,7 +34,7 @@ const loginUser = async (payload: { email: string; password: string }) => {
   );
 
   // Generate Refresh Token
-  const refreshToken = generateToken(
+  const refreshToken = jwtHelper.generateToken(
     {
       email: userData.email,
       role: userData.role,
@@ -53,19 +54,20 @@ const loginUser = async (payload: { email: string; password: string }) => {
 // Refresh Token
 const refreshToken = async (refreshToken: string) => {
   try {
-    let decoded = jwt.verify(refreshToken, "12345678");
+    let decoded = jwtHelper.verifyToken(refreshToken, "12345678");
     console.log(decoded);
 
     // Check User Exist
     const userData = await prisma.user.findUniqueOrThrow({
       where: {
         email: decoded.email,
+        status: UserStatus.ACTIVE,
       },
     });
     console.log(userData);
 
     // Generate Access Token
-    const accessToken = generateToken(
+    const accessToken = jwtHelper.generateToken(
       {
         email: userData.email,
         role: userData.role,
@@ -79,7 +81,7 @@ const refreshToken = async (refreshToken: string) => {
       needPasswordChange: userData.needPasswordChange,
     };
   } catch (err: any) {
-    throw new Error(err);
+    throw new Error("User Not Found");
   }
 };
 

@@ -10,7 +10,7 @@ export const globalErrorHandler = (
   //console.log("Reach");
   res.status(StatusCodes.NOT_FOUND).json({
     success: false,
-    message: err.name || "Something Went Wrong",
+    message: err.message || err.name || "Something Went Wrong",
     data: err,
   });
 };
