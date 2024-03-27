@@ -49,7 +49,7 @@ const loginUser = async (payload: { email: string; password: string }) => {
     config.refresh_jwt_secret_expries_in as string
   );
 
-  //console.log({ accessToken });
+  //
   return {
     accessToken,
     refreshToken,
@@ -64,7 +64,6 @@ const refreshToken = async (refreshToken: string) => {
       refreshToken,
       config.refresh_jwt_secret as string
     );
-    console.log({ decoded });
 
     // Check User Exist
     const userData = await prisma.user.findUniqueOrThrow({
@@ -73,7 +72,6 @@ const refreshToken = async (refreshToken: string) => {
         status: UserStatus.ACTIVE,
       },
     });
-    console.log(userData);
 
     // Generate Access Token
     const accessToken = jwtHelper.generateToken(
@@ -96,19 +94,17 @@ const refreshToken = async (refreshToken: string) => {
 
 // Change Password
 const changePassword = async (user: any, payload: any) => {
-  //console.log(user, payload);
+  //
   const userData = await prisma.user.findUniqueOrThrow({
     where: {
       email: user.email,
     },
   });
-  console.log({ userData });
 
   const checkPassword = await bcrypt.compare(
     payload.oldPassword,
     userData.password
   );
-  console.log({ checkPassword });
 
   if (!checkPassword) {
     throw new ApiError(StatusCodes.FORBIDDEN, "Password Incorrect !!!");
@@ -133,8 +129,6 @@ const changePassword = async (user: any, payload: any) => {
 
 // Forgot Password
 const forgotPassword = async (payload: { email: string }) => {
-  console.log(payload.email);
-
   const userData = await prisma.user.findUniqueOrThrow({
     where: {
       email: payload.email,
@@ -148,11 +142,8 @@ const forgotPassword = async (payload: { email: string }) => {
     "10m"
   );
 
-  console.log({ resetPasswordToken });
-
   const resetPasswordLink = `http://localhost:4000/api/v1/auth/reset-password?userId=${userData.id}&token=${resetPasswordToken}`;
 
-  console.log({ resetPasswordLink });
   const html = `
   <div>
     <p>The reset link <a href=${resetPasswordLink}>Click Here</a></p>

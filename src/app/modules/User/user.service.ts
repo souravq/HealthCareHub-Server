@@ -5,13 +5,12 @@ import bcrypt from "bcrypt";
 const createAdmin = async (data: any) => {
   const hashPassword = bcrypt.hashSync(data.password, 12);
 
-  console.log(data);
   const userData = {
     email: data.admin.email,
     password: hashPassword,
     role: UserRole.ADMIN,
   };
-  console.log(userData);
+
   const result = await prisma.$transaction(async (transactionClient) => {
     await transactionClient.user.create({
       data: userData,

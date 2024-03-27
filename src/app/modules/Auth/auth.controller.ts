@@ -15,7 +15,6 @@ const loginUser = catchAsync(
       httpOnly: true,
     });
 
-    console.log(result);
     sendResponse(res, {
       statusCode: 200,
       success: true,
@@ -32,7 +31,7 @@ const loginUser = catchAsync(
 const refreshToken = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     let { refreshToken } = req.cookies;
-    console.log({ refreshToken });
+
     let result = await AuthService.refreshToken(refreshToken);
     sendResponse(res, {
       statusCode: StatusCodes.OK,
@@ -59,7 +58,6 @@ const changePassword = catchAsync(
 // Forgot Password
 const forgotPassword = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    console.log(req.body);
     const result = await AuthService.forgotPassword(req.body);
     sendResponse(res, {
       statusCode: StatusCodes.OK,

@@ -7,7 +7,7 @@ export const globalErrorHandler = (
   res: Response,
   next: NextFunction
 ) => {
-  //console.log("Reach");
+  //
   res.status(StatusCodes.NOT_FOUND).json({
     success: false,
     message: err.message || err.name || "Something Went Wrong",

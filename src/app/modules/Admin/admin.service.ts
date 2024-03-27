@@ -20,7 +20,7 @@ const getAllAdminDataFromDB = async (param: any) => {
     });
   }
 
-  //   console.log(filterdata);
+  //
   //   if (Object.keys(filterdata).length > 0) {
   //     andCondition.push({
   //       AND: Object.keys(filterdata).map((key) => {
