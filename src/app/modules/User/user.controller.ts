@@ -4,21 +4,7 @@ import { imageUpload } from "../../helpers/imageUpload";
 
 const createAdmin = async (req: Request, res: Response) => {
   try {
-    //console.log("File", req.file);
-    // console.log("Data", req.body.data);
-
-    const file = req.file;
-    if (file) {
-      const imageUploadToCloudinary = await imageUpload.imageUploadToCloudinary(
-        file
-      );
-      console.log({ imageUploadToCloudinary });
-      req.body.data.admin.profilePhoto = imageUploadToCloudinary?.secure_url;
-
-      console.log(req.body.data);
-    }
-
-    const result = await userService.createAdmin(req.body);
+    const result = await userService.createAdmin(req);
     res.status(200).json({
       success: true,
       message: "Admin Created Successfully !!!",

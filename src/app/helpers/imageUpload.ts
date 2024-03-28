@@ -1,6 +1,7 @@
 import { v2 as cloudinary } from "cloudinary";
 import multer from "multer";
 import path from "path";
+import fs from "fs";
 
 cloudinary.config({
   cloud_name: "djnkmibzv",
@@ -28,6 +29,7 @@ const imageUploadToCloudinary = async (file: any) => {
       file.path,
       { public_id: file.originalname },
       (error, result) => {
+        fs.unlinkSync(file.path);
         if (error) {
           reject(error);
         } else {

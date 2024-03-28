@@ -2,6 +2,7 @@ import express, { NextFunction, Request, Response } from "express";
 import { userController } from "./user.controller";
 import auth from "../../middlewares/auth";
 import { imageUpload } from "../../helpers/imageUpload";
+import { userValidation } from "./user.validation";
 const router = express.Router();
 
 // const storage = multer.diskStorage({
@@ -35,7 +36,12 @@ router.post(
   "/",
   auth("SUPER_ADMIN", "ADMIN", "DOCTOR"),
   imageUpload.upload.single("file"),
-  userController.createAdmin
+  (req: Request, res: Response, next: NextFunction) => {
+    req.body = userValidation.createAdminValidation.parse(
+      JSON.parse(req.body.data)
+    );
+    return userController.createAdmin(req, res);
+  }
 );
 
 export const userRouter = router;
