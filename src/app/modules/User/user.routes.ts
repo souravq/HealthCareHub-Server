@@ -3,6 +3,7 @@ import { userController } from "./user.controller";
 import auth from "../../middlewares/auth";
 import { imageUpload } from "../../helpers/imageUpload";
 import { userValidation } from "./user.validation";
+import { UserRole } from "@prisma/client";
 const router = express.Router();
 
 // const storage = multer.diskStorage({
@@ -42,6 +43,12 @@ router.post(
     );
     return userController.createAdmin(req, res);
   }
+);
+
+router.get(
+  "/myprofile",
+  auth(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.DOCTOR, UserRole.PATIENT),
+  userController.getMyProfile
 );
 
 export const userRouter = router;

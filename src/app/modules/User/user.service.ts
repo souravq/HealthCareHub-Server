@@ -33,6 +33,25 @@ const createAdmin = async (req: any) => {
   return result;
 };
 
+// Get My Profile Data
+const getMyProfile = async (user: any) => {
+  const userInfo = await prisma.user.findUniqueOrThrow({
+    where: {
+      email: user.email,
+    },
+  });
+  let profileInfo;
+  if (userInfo.role === UserRole.ADMIN) {
+    profileInfo = await prisma.admin.findUniqueOrThrow({
+      where: {
+        email: userInfo.email,
+      },
+    });
+  }
+  return { ...userInfo, ...profileInfo };
+};
+
 export const userService = {
   createAdmin,
+  getMyProfile,
 };
