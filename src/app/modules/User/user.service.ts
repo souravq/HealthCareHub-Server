@@ -37,7 +37,6 @@ const createAdmin = async (payload: any) => {
 // Create Doctor
 const createDoctor = async (payload: any) => {
   const file = payload.file;
-  console.log({ file });
   if (file) {
     const imageUploadToCloudinary: ImageUploadData =
       await imageUpload.imageUploadToCloudinary(file);

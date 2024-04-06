@@ -1,10 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import { userService } from "./user.service";
-import { imageUpload } from "../../helpers/imageUpload";
 import { catchAsync } from "../../../shared/catchAsync";
 import { sendResponse } from "../../../shared/sendResponse";
 import { StatusCodes } from "http-status-codes";
-import { boolean } from "zod";
 
 // Create Admin
 const createAdmin = async (req: Request, res: Response) => {
@@ -27,7 +25,6 @@ const createAdmin = async (req: Request, res: Response) => {
 // Create Doctor
 const createDoctor = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    console.log(JSON.parse(req.body.data));
     req.body = JSON.parse(req.body.data);
     const result = await userService.createDoctor(req);
     sendResponse(res, {
