@@ -6,36 +6,10 @@ import { userValidation } from "./user.validation";
 import { UserRole } from "@prisma/client";
 const router = express.Router();
 
-// const storage = multer.diskStorage({
-//   destination: function (req, file, cb) {
-//     cb(null, path.join(process.cwd(), "uploads"));
-//   },
-//   filename: function (req, file, cb) {
-//     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-//     cb(null, file.fieldname + "-" + uniqueSuffix);
-//   },
-// });
-
-// const upload = multer({ storage: storage });
-
-// // Cloudinary
-// cloudinary.config({
-//   cloud_name: "djnkmibzv",
-//   api_key: "132877126913535",
-//   api_secret: "8rLrAPyE2lUYvWFdqOsjP_sf1cI",
-// });
-
-// cloudinary.uploader.upload(
-//   "https://upload.wikimedia.org/wikipedia/commons/a/ae/Olympic_flag.jpg",
-//   { public_id: "olympic_flag" },
-//   function (error, result) {
-//     console.log(result);
-//   }
-// );
-
+// Create Admin
 router.post(
-  "/",
-  auth("SUPER_ADMIN", "ADMIN", "DOCTOR"),
+  "/create-admin",
+  auth("SUPER_ADMIN", "ADMIN"),
   imageUpload.upload.single("file"),
   (req: Request, res: Response, next: NextFunction) => {
     req.body = userValidation.createAdminValidation.parse(
@@ -45,6 +19,23 @@ router.post(
   }
 );
 
+// Create Doctor
+router.post(
+  "/create-doctor",
+  auth("SUPER_ADMIN", "ADMIN"),
+  imageUpload.upload.single("file"),
+  userController.createDoctor
+  // (req: Request, res: Response, next: NextFunction) => {
+  //   console.log("Enter");
+  //   req.body = userValidation.createDoctorValidation.parse(
+  //     JSON.parse(req.body.data)
+  //   );
+  //   console.log("data", req.body);
+  //   return userController.createDoctor(req, res, next);
+  // }
+);
+
+// Get My Profile
 router.get(
   "/myprofile",
   auth(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.DOCTOR, UserRole.PATIENT),

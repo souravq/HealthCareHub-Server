@@ -4,19 +4,20 @@ import bcrypt from "bcrypt";
 import { imageUpload } from "../../helpers/imageUpload";
 import { ImageUploadData } from "../../interface";
 
-const createAdmin = async (req: any) => {
-  const file = req.file;
+// Create Admin
+const createAdmin = async (payload: any) => {
+  const file = payload.file;
   if (file) {
     const imageUploadToCloudinary: ImageUploadData =
       await imageUpload.imageUploadToCloudinary(file);
 
-    req.body.admin.profilePhoto = imageUploadToCloudinary?.secure_url;
+    payload.body.admin.profilePhoto = imageUploadToCloudinary?.secure_url;
   }
 
-  const hashPassword = bcrypt.hashSync(req.body.password, 12);
+  const hashPassword = bcrypt.hashSync(payload.body.password, 12);
 
   const userData = {
-    email: req.body.admin.email,
+    email: payload.body.admin.email,
     password: hashPassword,
     role: UserRole.ADMIN,
   };
@@ -26,9 +27,40 @@ const createAdmin = async (req: any) => {
       data: userData,
     });
     const createAdminData = await transactionClient.admin.create({
-      data: req.body.admin,
+      data: payload.body.admin,
     });
     return createAdminData;
+  });
+  return result;
+};
+
+// Create Doctor
+const createDoctor = async (payload: any) => {
+  const file = payload.file;
+  console.log({ file });
+  if (file) {
+    const imageUploadToCloudinary: ImageUploadData =
+      await imageUpload.imageUploadToCloudinary(file);
+
+    payload.body.doctor.profilePhoto = imageUploadToCloudinary?.secure_url;
+  }
+
+  const hashPassword = bcrypt.hashSync(payload.body.password, 12);
+
+  const userData = {
+    email: payload.body.doctor.email,
+    password: hashPassword,
+    role: UserRole.DOCTOR,
+  };
+
+  const result = await prisma.$transaction(async (transactionClient) => {
+    await transactionClient.user.create({
+      data: userData,
+    });
+    const createDoctorData = await transactionClient.doctor.create({
+      data: payload.body.doctor,
+    });
+    return createDoctorData;
   });
   return result;
 };
@@ -53,5 +85,6 @@ const getMyProfile = async (user: any) => {
 
 export const userService = {
   createAdmin,
+  createDoctor,
   getMyProfile,
 };
