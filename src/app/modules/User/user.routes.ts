@@ -35,6 +35,13 @@ router.post(
   // }
 );
 
+// Create Patient
+router.post(
+  "/create-patient",
+  imageUpload.upload.single("file"),
+  userController.createPatient
+);
+
 // Get My Profile
 router.get(
   "/myprofile",
