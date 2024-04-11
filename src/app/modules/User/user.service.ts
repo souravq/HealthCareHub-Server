@@ -108,6 +108,18 @@ const getMyProfile = async (user: any) => {
         email: userInfo.email,
       },
     });
+  } else if (userInfo.role === UserRole.DOCTOR) {
+    profileInfo = await prisma.doctor.findUniqueOrThrow({
+      where: {
+        email: userInfo.email,
+      },
+    });
+  } else if (userInfo.role === UserRole.PATIENT) {
+    profileInfo = await prisma.patient.findUniqueOrThrow({
+      where: {
+        email: userInfo.email,
+      },
+    });
   }
   return { ...userInfo, ...profileInfo };
 };

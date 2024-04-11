@@ -6,6 +6,13 @@ import { userValidation } from "./user.validation";
 import { UserRole } from "@prisma/client";
 const router = express.Router();
 
+// Get My Profile
+router.get(
+  "/myprofile",
+  auth(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.DOCTOR, UserRole.PATIENT),
+  userController.getMyProfile
+);
+
 // Create Admin
 router.post(
   "/create-admin",
@@ -40,13 +47,6 @@ router.post(
   "/create-patient",
   imageUpload.upload.single("file"),
   userController.createPatient
-);
-
-// Get My Profile
-router.get(
-  "/myprofile",
-  auth(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.DOCTOR, UserRole.PATIENT),
-  userController.getMyProfile
 );
 
 export const userRouter = router;
