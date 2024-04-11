@@ -63,9 +63,27 @@ const getMyProfile = catchAsync(
   }
 );
 
+// Update My Profile
+const updateMyProfile = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    //req.body = JSON.parse(req.body.data);
+    const user = req.user;
+    const file = req.file;
+    console.log({ file });
+    const result = await userService.updateMyProfile(user, file, req.body);
+    sendResponse(res, {
+      statusCode: StatusCodes.OK,
+      success: true,
+      message: "Profile Updated Successfully!!!",
+      data: result,
+    });
+  }
+);
+
 export const userController = {
   createAdmin,
   createDoctor,
   createPatient,
   getMyProfile,
+  updateMyProfile,
 };

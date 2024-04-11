@@ -16,7 +16,7 @@ router.get(
 // Create Admin
 router.post(
   "/create-admin",
-  auth("SUPER_ADMIN", "ADMIN"),
+  auth(UserRole.SUPER_ADMIN, UserRole.ADMIN),
   imageUpload.upload.single("file"),
   (req: Request, res: Response, next: NextFunction) => {
     req.body = userValidation.createAdminValidation.parse(
@@ -29,7 +29,7 @@ router.post(
 // Create Doctor
 router.post(
   "/create-doctor",
-  auth("SUPER_ADMIN", "ADMIN"),
+  auth(UserRole.SUPER_ADMIN, UserRole.ADMIN),
   imageUpload.upload.single("file"),
   userController.createDoctor
   // (req: Request, res: Response, next: NextFunction) => {
@@ -47,6 +47,17 @@ router.post(
   "/create-patient",
   imageUpload.upload.single("file"),
   userController.createPatient
+);
+
+// Update My Profile
+router.patch(
+  "/update-my-profile",
+  auth(UserRole.SUPER_ADMIN, UserRole.ADMIN, UserRole.DOCTOR, UserRole.PATIENT),
+  imageUpload.upload.single("file"),
+  (req: Request, res: Response, next: NextFunction) => {
+    req.body = JSON.parse(req.body.data);
+    return userController.updateMyProfile(req, res, next);
+  }
 );
 
 export const userRouter = router;

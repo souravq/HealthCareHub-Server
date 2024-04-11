@@ -1,4 +1,4 @@
-import { PrismaClient, UserRole } from "@prisma/client";
+import { PrismaClient, UserRole, UserStatus } from "@prisma/client";
 const prisma = new PrismaClient();
 import bcrypt from "bcrypt";
 import { imageUpload } from "../../helpers/imageUpload";
@@ -124,9 +124,52 @@ const getMyProfile = async (user: any) => {
   return { ...userInfo, ...profileInfo };
 };
 
+// Update My Profile
+const updateMyProfile = async (user: any, file: any, payload: any) => {
+  //const file = payload.file;
+  if (file) {
+    const imageUploadToCloudinary: ImageUploadData =
+      await imageUpload.imageUploadToCloudinary(file);
+
+    payload.profilePhoto = imageUploadToCloudinary?.secure_url;
+  }
+
+  const userInfo = await prisma.user.findUniqueOrThrow({
+    where: {
+      email: user.email,
+      status: UserStatus.ACTIVE,
+    },
+  });
+  let profileInfo;
+  if (userInfo.role === UserRole.ADMIN) {
+    profileInfo = await prisma.admin.update({
+      where: {
+        email: userInfo.email,
+      },
+      data: payload,
+    });
+  } else if (userInfo.role === UserRole.DOCTOR) {
+    profileInfo = await prisma.doctor.update({
+      where: {
+        email: userInfo.email,
+      },
+      data: payload,
+    });
+  } else if (userInfo.role === UserRole.PATIENT) {
+    profileInfo = await prisma.patient.update({
+      where: {
+        email: userInfo.email,
+      },
+      data: payload,
+    });
+  }
+  return { ...profileInfo };
+};
+
 export const userService = {
   createAdmin,
   createDoctor,
   createPatient,
   getMyProfile,
+  updateMyProfile,
 };
