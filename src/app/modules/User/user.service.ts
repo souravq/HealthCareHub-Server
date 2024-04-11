@@ -2,7 +2,7 @@ import { PrismaClient, UserRole, UserStatus } from "@prisma/client";
 const prisma = new PrismaClient();
 import bcrypt from "bcrypt";
 import { imageUpload } from "../../helpers/imageUpload";
-import { ImageUploadData } from "../../interface";
+import { IAuthUser, ImageUploadData } from "../../interface";
 
 // Create Admin
 const createAdmin = async (payload: any) => {
@@ -95,10 +95,10 @@ const createPatient = async (payload: any) => {
 };
 
 // Get My Profile Data
-const getMyProfile = async (user: any) => {
+const getMyProfile = async (user: IAuthUser) => {
   const userInfo = await prisma.user.findUniqueOrThrow({
     where: {
-      email: user.email,
+      email: user?.email,
     },
   });
   let profileInfo;
@@ -125,7 +125,7 @@ const getMyProfile = async (user: any) => {
 };
 
 // Update My Profile
-const updateMyProfile = async (user: any, file: any, payload: any) => {
+const updateMyProfile = async (user: IAuthUser, file: any, payload: any) => {
   //const file = payload.file;
   if (file) {
     const imageUploadToCloudinary: ImageUploadData =
@@ -136,7 +136,7 @@ const updateMyProfile = async (user: any, file: any, payload: any) => {
 
   const userInfo = await prisma.user.findUniqueOrThrow({
     where: {
-      email: user.email,
+      email: user?.email,
       status: UserStatus.ACTIVE,
     },
   });

@@ -3,6 +3,7 @@ import { userService } from "./user.service";
 import { catchAsync } from "../../../shared/catchAsync";
 import { sendResponse } from "../../../shared/sendResponse";
 import { StatusCodes } from "http-status-codes";
+import { IAuthUser } from "../../interface";
 
 // Create Admin
 const createAdmin = async (req: Request, res: Response) => {
@@ -52,8 +53,12 @@ const createPatient = catchAsync(
 
 // Get My Profile
 const getMyProfile = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {
-    const result = await userService.getMyProfile(req.user);
+  async (
+    req: Request & { user?: IAuthUser },
+    res: Response,
+    next: NextFunction
+  ) => {
+    const result = await userService.getMyProfile(req.user as IAuthUser);
     sendResponse(res, {
       statusCode: StatusCodes.OK,
       success: true,
@@ -65,12 +70,19 @@ const getMyProfile = catchAsync(
 
 // Update My Profile
 const updateMyProfile = catchAsync(
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (
+    req: Request & { user?: IAuthUser },
+    res: Response,
+    next: NextFunction
+  ) => {
     //req.body = JSON.parse(req.body.data);
     const user = req.user;
     const file = req.file;
-    console.log({ file });
-    const result = await userService.updateMyProfile(user, file, req.body);
+    const result = await userService.updateMyProfile(
+      user as IAuthUser,
+      file,
+      req.body
+    );
     sendResponse(res, {
       statusCode: StatusCodes.OK,
       success: true,

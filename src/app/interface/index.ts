@@ -1,3 +1,5 @@
+import { UserRole } from "@prisma/client";
+
 export interface ImageUploadData {
   asset_id: string;
   public_id: string;
@@ -32,3 +34,8 @@ export interface UploadedFile {
   path: string;
   size: number;
 }
+
+export type IAuthUser = {
+  email: string;
+  role: UserRole;
+} | null;
